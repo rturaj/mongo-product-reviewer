@@ -9,6 +9,7 @@ mongoose.connect('mongodb://localhost/product-reviewer', {
   useUnifiedTopology: true,
 });
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use('/', routes);
 app.use(errorHandlerMiddleware);
 
