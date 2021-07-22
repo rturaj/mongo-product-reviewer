@@ -1,8 +1,11 @@
-const Product = require('../models/Product');
+const Product = require('../schemas/Product');
 
 class ProductService {
-  findAll() {
-    return Product.find();
+  findAll({ page = 1, perPage = 5, sortBy = 1, sortDesc = 1, ...filters }) {
+    return Product.find(filters)
+      .sort({ [sortBy]: +sortDesc })
+      .skip(+perPage * (+page - 1))
+      .limit(+perPage);
   }
   findById(id) {
     return Product.findById(id);
@@ -19,6 +22,26 @@ class ProductService {
   async delete(id) {
     await Product.findByIdAndRemove(id);
     return { id };
+  }
+
+  async addReview(id, data) {
+    const product = await Product.findById(id);
+    product.reviews.push(data);
+    await product.save();
+    return product;
+  }
+
+  async removeReview(id, reviewId) {
+    const product = await Product.findById(id);
+    product.reviews.id(reviewId).remove();
+    await product.save();
+    return product;
+  }
+
+  async getPriceRange() {
+    const [min] = await Product.find().sort({ price: 1 }).limit(1);
+    const [max] = await Product.find().sort({ price: -1 }).limit(1);
+    return { min: min?.price || 0, max: max?.price || 0 };
   }
 }
 

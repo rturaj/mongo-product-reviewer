@@ -1,16 +1,15 @@
-const Product = require('../models/Product');
 const productService = require('../services/productService');
 
 class ProductController {
-  async getProducts(req, res, next) {
+  async getAll(req, res, next) {
     try {
-      const products = await productService.findAll();
+      const products = await productService.findAll(req.query);
       res.json(products);
     } catch (err) {
       next(err);
     }
   }
-  async getProduct(req, res, next) {
+  async getOne(req, res, next) {
     try {
       const product = await productService.findById(req.params.id);
       if (!product) {
@@ -22,7 +21,7 @@ class ProductController {
       next(err);
     }
   }
-  async postProduct(req, res, next) {
+  async post(req, res, next) {
     try {
       const product = await productService.create(req.body);
       res.json(product);
@@ -30,7 +29,7 @@ class ProductController {
       next(err);
     }
   }
-  async updateProduct(req, res, next) {
+  async update(req, res, next) {
     try {
       const product = await productService.update(req.params.id, req.body);
       res.json(product);
@@ -38,10 +37,33 @@ class ProductController {
       next(err);
     }
   }
-  async deleteProduct(req, res, next) {
+  async delete(req, res, next) {
     try {
       const result = await productService.delete(req.params.id);
-      console.log(result);
+      res.json(result);
+    } catch (err) {
+      next(err);
+    }
+  }
+  async postReview(req, res, next) {
+    try {
+      const product = await productService.addReview(req.params.id, req.body);
+      res.json(product);
+    } catch (err) {
+      next(err);
+    }
+  }
+  async deleteReview(req, res, next) {
+    try {
+      const product = await productService.removeReview(req.params.id, req.params.reviewId);
+      res.json(product);
+    } catch (err) {
+      next(err);
+    }
+  }
+  async getPriceRange(req, res, next) {
+    try {
+      const result = await productService.getPriceRange();
       res.json(result);
     } catch (err) {
       next(err);

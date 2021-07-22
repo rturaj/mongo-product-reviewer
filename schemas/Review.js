@@ -14,7 +14,7 @@ const ReviewSchema = new Schema({
     max: 5,
   },
   author: {
-    type: Number,
+    type: String,
   },
 });
 
