@@ -69,5 +69,13 @@ class ProductController {
       next(err);
     }
   }
+  async getStats(req, res, next) {
+    try {
+      const result = await productService.getStats();
+      res.json(result);
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 module.exports = new ProductController();

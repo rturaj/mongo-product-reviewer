@@ -5,6 +5,7 @@ const router = express.Router();
 
 router.get('/', productController.getAll);
 router.get('/price-range', productController.getPriceRange);
+router.get('/stats', productController.getStats);
 router.get('/:id', productController.getOne);
 router.post('/', productController.post);
 router.put('/:id', productController.update);

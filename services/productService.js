@@ -43,6 +43,29 @@ class ProductService {
     const [max] = await Product.find().sort({ price: -1 }).limit(1);
     return { min: min?.price || 0, max: max?.price || 0 };
   }
+
+  async getStats() {
+    const result = await Product.aggregate([
+      {
+        $group: {
+          _id: '$category',
+          avg: { $avg: '$price' },
+          min: { $min: '$price' },
+          max: { $max: '$price' },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          category: '$_id',
+          avg: 1,
+          min: 1,
+        },
+      },
+    ]);
+
+    return result;
+  }
 }
 
 module.exports = new ProductService();
